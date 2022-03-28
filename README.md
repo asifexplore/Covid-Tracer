@@ -2,6 +2,13 @@
 
 This is a SIT ICT2103 project developed using python.
 
+### The team consists of 
+@GeraldHeng
+@Luxreus
+@TanYuHui
+@NJinng
+Myself
+
 ### Installation Guide
 - Have Python version 3.8 or newer installed
 - Ensure that is in your PATH for windows systems: https://projects.raspberrypi.org/en/projects/using-pip-on-windows/4
