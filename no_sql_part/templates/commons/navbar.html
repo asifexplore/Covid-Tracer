@@ -1,0 +1,88 @@
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+  <div class="container-fluid">
+    <span class="navbar-brand mb-0 h1">SG Covid Tracer</span>
+    <button
+      class="navbar-toggler"
+      type="button"
+      data-bs-toggle="collapse"
+      data-bs-target="#navbarNavDropdown"
+      aria-controls="navbarNavDropdown"
+      aria-expanded="false"
+      aria-label="Toggle navigation"
+    >
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNavDropdown">
+      <ul class="navbar-nav">
+        <li class="nav-item">
+          <a
+            class="nav-link {{'active' if currentNav=='dashboard' }}"
+            aria-current="page"
+            href="/"
+            >Dashboard</a
+          >
+        </li>
+        {% if name != None %}
+        <li class="nav-item">
+          <a
+            class="nav-link {{'active' if currentNav=='manage-citizen' }}"
+            href="/manage-citizen"
+            >Manage Citizens</a
+          >
+        </li>
+        <li class="nav-item">
+          <a
+            class="nav-link {{'active' if currentNav=='manage-cluster' }}"
+            href="/manage-cluster"
+            >Manage Clusters</a
+          >
+        </li>
+
+        <li class="nav-item">
+          <a
+            class="nav-link {{'active' if currentNav=='manage-vaccine' }}"
+            href="/manage-vaccine"
+            >Manage Vaccines</a
+          >
+        </li>
+
+        <!-- <li class="nav-item">
+          <a
+            class="nav-link {{'active' if currentNav=='manage-vaccine' }}"
+            href="/manage-landmark"
+            >Manage Landmarks</a
+          >
+        </li> -->
+        {% endif %}
+      </ul>
+      {% if name != None %}
+
+      <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+        <li class="nav-item dropdown">
+          <a
+            class="nav-link dropdown-toggle"
+            href="#"
+            id="navbarDropdownMenuLink"
+            role="button"
+            data-bs-toggle="dropdown"
+            aria-expanded="false"
+          >
+            Hi {{name}}
+          </a>
+          <ul class="dropdown-menu" aria-labelledby="dropdown">
+            <li><a class="dropdown-item" href="/logout">Logout</a></li>
+          </ul>
+        </li>
+      </ul>
+      {% else %}
+      <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+        <li class="nav-item">
+          <a class="nav-link" href="/login" role="button" aria-expanded="false">
+            Login
+          </a>
+        </li>
+      </ul>
+      {% endif %}
+    </div>
+  </div>
+</nav>

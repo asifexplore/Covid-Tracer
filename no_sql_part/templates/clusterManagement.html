@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <title>Covid Tracer</title>
+    <meta name="description" content="The HTML5 Herald"/>
+    <meta name="author" content="SitePoint"/>
+    <meta
+            name="viewport"
+            content="width=device-width, minimum-scale=1, maximum-scale=1"
+    />
+
+    <!-- jQuery -->
+    <script
+            src="https://code.jquery.com/jquery-3.4.1.min.js"
+            integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
+            crossorigin="anonymous"
+    ></script>
+
+    <!-- Bootstrap -->
+    <script
+            src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+            crossorigin="anonymous"
+    ></script>
+    <link
+            href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
+            rel="stylesheet"
+            integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC"
+            crossorigin="anonymous"
+    />
+    <!-- Axios -->
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+
+    <!-- JS -->
+    <script type=text/javascript src="{{
+      url_for('static', filename='js/clusterManagement.js') }}"></script>
+</head>
+
+<body>
+{% with currentNav='manage-cluster', login=true %}{% include
+'commons/navbar.html' %}{% endwith %} {% include 'commons/clusterModal.html'%}
+
+<div class="container" style="margin-top: 20px">
+    <div class="row">
+        <div class="col-sm-5">
+            <h1>Manage Clusters</h1>
+            <h6 class="text-muted"><i>Powered by Neo4j Graph Database, AuraDB.</i></h6>
+        </div>
+        <div class="col-sm-7 ms-auto align-self-start" style="text-align: justify">
+            <div>
+                <button type="button" class="btn btn-danger" onclick="detectAndUpdateClusters()">
+                    Update and Detect Clusters
+                </button>
+                <p class="text-muted">
+                    <small
+                    >Update all current clusters and find new clusters base on data.
+                    This function may take a long time depending on data.
+                    A cluster is formed when 10 or more visits to a landmark have been made by infected citizens within a 14 day range.
+                    If the number of visitors who are infected at a landmark is detected to be less than 10, the cluster is closed. <br><br>
+                    <i>Note that the detection of infected visitors to a landmark does not coincide with the actual number of citizens part of the cluster.
+                        This is because citizens can visit multiple landmarks and make multiple visits to the same landmarks as well.</i> </small
+                    >
+                </p>
+            </div>
+        </div>
+        <div class="row mt-2">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th scope="col">Cluster Status</th>
+                        <th scope="col">Cluster ID</th>
+                        <th scope="col">Landmark ID</th>
+                        <th scope="col">Landmark Name</th>
+                        <th scope="col">Date Formed</th>
+                        <th scope="col">Date Closed</th>
+                        <th scope="col">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for data in data %}
+                    <tr>
+                        <td>
+                            {% if data[0] == 'active' %}
+                            <span class="badge rounded-pill bg-danger">Active</span>
+                            {% elif data[0] == 'closed' %}
+                            <span class="badge rounded-pill bg-secondary text">Closed</span>
+                            {% endif %}
+                        </td>
+                        <td>{{ data[1] }}</td>
+                        <td>{{ data[2] }}</td>
+                        <td>{{ data[3] }}</td>
+                        <td>{{ data[4] }}</td>
+                        <td>{{ data[5] }}</td>
+                        <td>
+                            <button
+                                    data-bs-toggle="modal"
+                                    data-bs-target="#viewCitizensinClusters"
+                                    type="button"
+                                    class="btn btn-primary btn-sm"
+                                    onclick="getCitizensinCluster('{{ data[2] }}')"
+                            >
+                                View Citizens in Cluster
+                            </button>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="row">
+
+    </div>
+</div>
+</body>
+
+</html>

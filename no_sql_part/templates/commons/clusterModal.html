@@ -1,0 +1,71 @@
+<div
+  class="modal fade"
+  id="viewCitizensinClusters"
+  tabindex="-1"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-xl">
+    <div class="modal-content">
+      <div class="modal-header">
+        <div class="col">
+          <h5 class="modal-title" id="citizensinClusterModalTitle">
+            Citizens in Cluster
+          </h5>
+        </div>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+          aria-label="Close"
+        ></button>
+      </div>
+      <div class="modal-body">
+        <div id="nodata"></div>
+        <div class="spinner-border" id="clusterLoading">
+          <span class="visually-hidden">Loading...</span>
+        </div>
+        <table class="table" id="clusterData">
+          <thead>
+            <tr>
+              <th scope="col">NRIC</th>
+              <th scope="col">Full Name</th>
+              <th scope="col">Most Recent Status</th>
+              <th scope="col">Address</th>
+              <th scope="col">Mobile</th>
+              <th scope="col">DoB</th>
+              <th scope="col">Gender</th>
+            </tr>
+          </thead>
+          <tbody id="citizensinClusterData">
+            {#
+            <tr class="data-row">
+              #} {#
+              <td class="nric"></td>
+              #} {#
+              <td class="fullName"></td>
+              #} {#
+              <td class="most_recent_dose"></td>
+              #} {#
+              <th class="most_recent_status" scope="row"></th>
+              #} {#
+              <td class="address"></td>
+              #} {#
+              <td class="mobile"></td>
+              #} {#
+              <td class="dob"></td>
+              #} {#
+              <td class="gender"></td>
+              #} {#
+            </tr>
+            #}
+          </tbody>
+        </table>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+          Ok
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

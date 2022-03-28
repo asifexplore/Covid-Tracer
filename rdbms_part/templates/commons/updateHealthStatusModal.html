@@ -1,0 +1,54 @@
+<div class="modal fade" id="updateHealthModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <div class="col">
+          <h5 class="modal-title" id="updateHealthModalTitle">
+            Update Health Status
+          </h5>
+          <div class="text-muted" id="updateHealthName">Shen Xuan Hui</div>
+          <input type="hidden" id="updateHealthId" />
+        </div>
+
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+          aria-label="Close"
+        ></button>
+      </div>
+      <div class="modal-body">
+        <!-- <div class="spinner-border" id="updateHealthLoading">
+          <span class="visually-hidden">Loading...</span>
+        </div> -->
+        <!-- Current Health Status:<b> Healthy on 22/10/2020</b> -->
+        <form id="updateHealthData">
+          <div class="mb-3">
+            <label for="recipient-name" class="col-form-label"
+              >Updated Health Status:</label
+            >
+            <div id="updateHealthSelect">
+              <select class="form-select" aria-label="Default select example">
+                <option value="Healthy">Healthy</option>
+                <option value="Infected">Infected</option>
+                <option value="Dead">Dead</option>
+              </select>
+            </div>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+          Cancel
+        </button>
+        <button
+          type="button"
+          class="btn btn-primary"
+          onclick="updateCitizenHealthHistory('{{admin_id}}')"
+        >
+          Update
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,31 @@
+<div class="modal" tabindex="-1" id="deleteVaccineConfirmationModal">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Delete Vaccine</h5>
+        <input type="hidden" id="deleteVaccineId" />
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+          aria-label="Close"
+        ></button>
+      </div>
+      <div class="modal-body">
+        <p>
+          Are you sure you want to delete this vaccine, by deleting this
+          vaccine, the respective vaccination history using this vaccine id will
+          be deleted as well.
+        </p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+          Close
+        </button>
+        <button type="button" class="btn btn-danger" onclick="deleteVaccine()">
+          Delete
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

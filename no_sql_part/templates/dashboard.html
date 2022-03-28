@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Covid Tracer</title>
+    <meta name="description" content="The HTML5 Herald" />
+    <meta name="author" content="SitePoint" />
+
+    <meta
+      name="viewport"
+      content="width=device-width, minimum-scale=1, maximum-scale=1"
+    />
+
+    <!-- jQuery -->
+    <script
+      src="https://code.jquery.com/jquery-3.4.1.min.js"
+      integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
+      crossorigin="anonymous"
+    ></script>
+
+    <!-- Bootstrap -->
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+      crossorigin="anonymous"
+    ></script>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC"
+      crossorigin="anonymous"
+    />
+
+    <!-- ChartJS -->
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.6.0/chart.min.js"
+      integrity="sha512-GMGzUEevhWh8Tc/njS0bDpwgxdCJLQBWG3Z2Ct+JGOpVnEmjvNx6ts4v6A2XJf1HOrtOsfhv3hBKpK9kE5z8AQ=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    ></script>
+  </head>
+
+  <body>
+    {% with currentNav='dashboard', name=name %} {% include
+    'commons/navbar.html' %}{% endwith %}
+
+    <div class="container" style="margin-top: 20px">
+      <div class="row">
+        <div class="col-md-10">
+          <h1>Dashboard</h1>
+          <p class="text-muted">
+            Check the local covid and vaccination cases status!
+          </p>
+        </div>
+
+        <div class="col-md-2 align-self-center">
+          <div class="btn-group">
+
+            <!--<select name="changeView" id="myselect" class="btn btn-secondary btn-sm dropdown-toggle" aria-expanded="false">
+              <option value="1" name="Last24Hours">Last 24 Hours</option>
+              <option value="2" name="Last7Days">Last 7 Days</option>
+              <option value="3" name="Last1Month">Last 1 Month</option>
+              <option value="4" name="Last1Month">Last 1 Year</option>
+              <option value="5" name="All">All</option>
+            </select>-->
+
+
+            <button
+              class="btn btn-secondary btn-sm dropdown-toggle"
+              type="button"
+              data-bs-toggle="dropdown"
+              aria-expanded="false"
+            >
+              {% if unit == 'day' %} Last 24 Hours {% elif unit == 'week' %}
+              Last 7 Days {% elif unit == 'month' %} Last 1 Month {% elif unit
+              == 'year' %} Last 1 Year {% else %} All {% endif %}
+            </button>
+            <ul class="dropdown-menu">
+              <li>
+                <a class="dropdown-item" href="/?unit=day">Last 24 Hours</a>
+              </li>
+              <li>
+                <a class="dropdown-item" href="/?unit=week">Last 7 Days</a>
+              </li>
+              <li>
+                <a class="dropdown-item" href="/?unit=month">Last 1 Month</a>
+              </li>
+              <li>
+                <a class="dropdown-item" href="/?unit=year">Last 1 Year</a>
+              </li>
+              <li><a class="dropdown-item" href="/?unit=all">All</a></li>
+            </button>
+
+          </div>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-md-3">
+          {% with type='oldest infected', value=oldest, datetimeRange='1 ' +
+          unit + ' ago', percentChange=oldest_change + '%' %} {% include
+          'commons/statcard.html' %}{% endwith %}
+        </div>
+        <div class="col-md-3">
+          {% with type='youngest infected', value=youngest, datetimeRange='1 ' +
+          unit +' ago', percentChange=youngest_change + '%' %} {% include
+          'commons/statcard.html' %}{% endwith %}
+        </div>
+        <div class="col-md-3">
+          {% with type='total infected', value=total_infected, datetimeRange='1 ' + unit +
+          ' ago', percentChange=percent_infected_change +'%' %} {% include 'commons/statcard.html' %}{%
+          endwith %}
+        </div>
+        <div class="col-md-3">
+          {% with type='total vaccinated', value=total_vaccinated, datetimeRange='1 ' + unit +
+          ' ago', percentChange=percent_vaccinated_change + '%' %} {% include 'commons/statcard.html' %}{%
+          endwith %}
+        </div>
+      </div>
+      <div class="row mt-5">
+        <div class="col-md-6">
+          <h4>Number of Infected in the past  {% if unit == 'day' %} Last 24 Hours {% elif unit == 'week' %}
+            Last 7 Days {% elif unit == 'month' %} Last 1 Month {% elif unit
+            == 'year' %} Last 1 Year {% else %} All {% endif %}</h4>
+          <canvas id="myChart" height="200"></canvas>
+        </div>
+        <div class="col-md-6">
+          <h4>Number of Vaccines distributed in the past  {% if unit == 'day' %} Last 24 Hours {% elif unit == 'week' %}
+            Last 7 Days {% elif unit == 'month' %} Last 1 Month {% elif unit
+            == 'year' %} Last 1 Year {% else %} All {% endif %}</h4>
+          <canvas id="myChart2" height="200"></canvas>
+        </div>
+      </div>
+    </div>
+  </body>
+  <script>
+
+
+
+    const ctx = document.getElementById("myChart").getContext("2d");
+    const ctx2 = document.getElementById("myChart2").getContext("2d");
+
+    const myChart2 = new Chart(ctx2, {
+      type: "line",
+      data: {
+        labels: [{% for item in noOfVaccinatedData %}
+                "{{item._id}}",
+                {% endfor %}],
+        datasets: [
+          {
+            label: "# of Vaccination Rate",
+            data: [{% for item in noOfVaccinatedData %}
+                "{{item.numberOfCount}}",
+                {% endfor %}],
+            backgroundColor: [{% for item in noOfVaccinatedData %}
+            "rgba(255,127,80,1)",
+                {% endfor %}],
+            borderColor: [{% for item in noOfVaccinatedData %}
+            "rgba(255,127,80,1)",
+                {% endfor %}],
+            borderWidth: 1,
+          },
+          // {
+          //   type: 'line',
+          //   label: '# of Vaccinated',
+          //   data: [{% for item in noOfVaccineDistributedData %}
+          //         "{{item}}",
+          //         {% endfor %}],
+          //   backgroundColor: ["rgba(255,127,80,1)"],
+          //   borderColor: "rgba(255,127,80,1)",
+          // },
+        ],
+      },
+      options: {
+       plugins: {
+            legend: {
+              display: false
+            }
+       },
+       scales: {
+          y: {
+            beginAtZero: true,
+            },
+          },
+       },
+    });
+    // Chart 1 | Infection Number
+    const myChart = new Chart(ctx, {
+      type: "bar",
+      data: {
+        labels: [{% for item in noOfInfectedData %}
+                "{{item.date}}",
+                {% endfor %}],
+        datasets: [
+          {
+            label: "# of Infected",
+            data: [{% for item in noOfInfectedData %}
+                "{{item.views}}",
+                {% endfor %}],
+            backgroundColor: [{% for item in noOfInfectedData %}
+            "rgba(255, 99, 132, 0.2)",
+                {% endfor %}],
+            borderColor: [{% for item in noOfInfectedData %}
+            "rgba(255, 99, 132, 1)",
+                {% endfor %}],
+            borderWidth: 1,
+          },
+        ],
+      },
+      options: {
+        scales: {
+          y: {
+            beginAtZero: true,
+          },
+        },
+      },
+    });
+
+
+
+  </script>
+</html>
